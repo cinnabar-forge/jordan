@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+import { viewer } from "../src/interactive.js";
+viewer();
