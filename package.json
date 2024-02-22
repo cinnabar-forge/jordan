@@ -10,9 +10,11 @@
     "url": "https://timurrin.github.io"
   },
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/cli.js",
   "bin": {
     "jordan": "./bin/jordan",
+    "jordan-cli": "./bin/jordan-command",
+    "jordan-cmd": "./bin/jordan-command",
     "jordan-command": "./bin/jordan-command"
   },
   "files": [
@@ -30,6 +32,7 @@
     }
   },
   "dependencies": {
+    "as-table": "~1.0.55",
     "commander": "~12.0.0",
     "inquirer": "~9.2.14"
   },
@@ -37,5 +40,8 @@
     "@cinnabar-forge/eslint-plugin": "~0.3.0",
     "husky": "~9.0.11",
     "mocha": "~10.3.0"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
