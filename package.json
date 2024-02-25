@@ -13,7 +13,10 @@
     "jordan",
     "restore"
   ],
-  "repository": "github:cinnabar-forge/node-jordan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cinnabar-forge/node-jordan.git"
+  },
   "license": "ISC",
   "author": {
     "name": "Timur Moziev",
@@ -23,10 +26,10 @@
   "type": "module",
   "main": "src/cli.js",
   "bin": {
-    "jordan": "./bin/jordan",
-    "jordan-cli": "./bin/jordan-command",
-    "jordan-cmd": "./bin/jordan-command",
-    "jordan-command": "./bin/jordan-command"
+    "jordan": "bin/jordan",
+    "jordan-cli": "bin/jordan-command",
+    "jordan-cmd": "bin/jordan-command",
+    "jordan-command": "bin/jordan-command"
   },
   "files": [
     "bin",
