@@ -9,15 +9,17 @@ export class JordanCase {
     }
     this.folder = folder;
     this.configsFolder = path.join(this.folder, "configs");
+    this.jordanFile = path.join(this.folder, "jordan.json");
     this.listFile = path.join(this.folder, "list.json");
     this.mapFile = path.join(this.folder, "map.json");
+    path.basename
   }
 
-  addConfig(name, path) {
+  addConfig(name, _path) {
     let isDirectory;
     try {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
-      isDirectory = fs.lstatSync(path).isDirectory();
+      isDirectory = fs.lstatSync(_path).isDirectory();
     } catch (e) {
       console.error(e);
     }
@@ -25,11 +27,9 @@ export class JordanCase {
     const map = this.getMap();
     const configExists = list.find((item) => item.name === name);
 
-    console.log(configExists);
-
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    if (!fs.existsSync(path)) {
-      console.log(`The specified path does not exist: ${path}`);
+    if (!fs.existsSync(_path)) {
+      console.log(`The specified path does not exist: ${_path}`);
       console.log(`Adding ${name} with the provided path regardless`);
     }
 
@@ -37,13 +37,13 @@ export class JordanCase {
       console.log(`${name} exists. Updating path`);
     } else {
       console.log(`${name} ${configExists ? "updated" : "added"}`);
-      list.push({ file: !isDirectory && "file", name });
+      list.push({ file: !isDirectory ? path.basename(_path) : undefined, name });
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       fs.writeFileSync(this.listFile, JSON.stringify(list, null, 2), "utf8");
     }
 
     // eslint-disable-next-line security/detect-object-injection
-    map[name] = path;
+    map[name] = _path;
     this.setMap(map);
   }
 
@@ -69,6 +69,15 @@ export class JordanCase {
       fs.mkdirSync(this.configsFolder, { recursive: true });
     }
     // eslint-disable-next-line security/detect-non-literal-fs-filename
+    if (!fs.existsSync(this.jordanFile)) {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      fs.writeFileSync(
+        this.jordanFile,
+        JSON.stringify({ jordan: true }, null, 2),
+        "utf8",
+      );
+    }
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
     if (!fs.existsSync(this.listFile)) {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       fs.writeFileSync(this.listFile, JSON.stringify([], null, 2), "utf8");
@@ -82,7 +91,7 @@ export class JordanCase {
 
   async operate(configs, names, action) {
     configs.forEach((config) => {
-      if (names.includes(config.name)) {
+      if (names.includes(config.name) && config.path != null) {
         const backupRelativePath = `${this.configsFolder}/${config.name}/`;
         const backupPath = path.resolve(backupRelativePath);
         const sourcePath = config.path;

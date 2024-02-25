@@ -75,12 +75,27 @@ program
             : "Doesn't exist"
           : "Active (The Cache)",
         // eslint-disable-next-line perfectionist/sort-objects
-        DESCRIPTION: item.description,
+        // DESCRIPTION: item.description,
       });
     });
 
     console.log(`Configurations (${list.length}):`);
     console.log(asTable.configure({ delimiter: " | " })(list));
+  });
+
+  program
+  .command("backup <configName>")
+  .description("Backup the configurations")
+  .action((configName) => {
+    const jordanCase = getJordanCase();
+    const configs = jordanCase
+      .getList()
+      .filter((item) => item.name === configName)
+      .map((item) => ({
+        ...item,
+        path: jordanCase.getMap()[item.name],
+      }));
+    jordanCase.operate(configs, [configName], "backup");
   });
 
 program
