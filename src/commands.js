@@ -96,8 +96,12 @@ export class JordanCase {
           console.log(`Backing up ${config.name} to ${backupPath}...`);
         } else if (action === "restore") {
           // eslint-disable-next-line security/detect-non-literal-fs-filename
-          const backupFilePath = config.file ? path.resolve(backupPath, config.file) : `${backupPath}/`
-          const sourceDirPath = config.file ? path.dirname(sourcePath) : sourcePath
+          const backupFilePath = config.file
+            ? path.resolve(backupPath, config.file)
+            : `${backupPath}/`;
+          const sourceDirPath = config.file
+            ? path.dirname(sourcePath)
+            : sourcePath;
           command = `rsync -avh --progress "${backupFilePath}" "${sourceDirPath}"`;
           console.log(`Restoring ${config.name} to ${sourceDirPath}...`);
         }
@@ -125,7 +129,7 @@ export class JordanCase {
 
   runCommand(command) {
     try {
-      console.log(command)
+      console.log(command);
       execSync(command, { stdio: "inherit" });
     } catch (error) {
       console.error(`Error executing command: ${command}`, error);

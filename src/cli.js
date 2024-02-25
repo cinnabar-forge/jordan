@@ -8,19 +8,19 @@ import { JordanCase } from "./commands.js";
 const scriptDirectory = path.dirname(new URL(import.meta.url).pathname);
 const version = JSON.parse(
   // eslint-disable-next-line security/detect-non-literal-fs-filename
-  fs.readFileSync(path.resolve(scriptDirectory, "..", "version.json"), "utf8")
+  fs.readFileSync(path.resolve(scriptDirectory, "..", "version.json"), "utf8"),
 );
 
 program
   .version(
     `v${version.major}.${version.minor}.${version.patch}`,
-    "-v, --version"
+    "-v, --version",
   )
   .description("Backup and restore your configs (and, practically, anything)")
   .option("-f, --folder <folder>", "Set the working folder")
   .option(
     "-c, --current",
-    "Use current folder as the working folder (overrides --folder)"
+    "Use current folder as the working folder (overrides --folder)",
   );
 
 let jordanCaseInstance;
@@ -66,8 +66,7 @@ program
         NAME: item.name,
         TYPE: item.file ? "file" : "directory",
         // eslint-disable-next-line perfectionist/sort-objects
-        PATH:
-          map[item.name] ?? (item.file ? `[${item.file}]` : ""),
+        PATH: map[item.name] ?? (item.file ? `[${item.file}]` : ""),
         // eslint-disable-next-line perfectionist/sort-objects
         PATH_STATUS: map[item.name]
           ? // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -75,8 +74,8 @@ program
             ? "Active"
             : "Doesn't exist"
           : "Active (The Cache)",
-          // eslint-disable-next-line perfectionist/sort-objects
-          DESCRIPTION: item.description
+        // eslint-disable-next-line perfectionist/sort-objects
+        DESCRIPTION: item.description,
       });
     });
 
@@ -93,12 +92,12 @@ program
     const map = jordanCase.getMap();
     const configs = list.map((item) => ({
       ...item,
-      path: map[item.name]
+      path: map[item.name],
     }));
     jordanCase.operate(
       configs,
       list.map((item) => item.name),
-      "backup"
+      "backup",
     );
   });
 
@@ -128,7 +127,7 @@ program
       .filter((item) => item.name === configName)
       .map((item) => ({
         ...item,
-        path: jordanCase.getMap()[item.name]
+        path: jordanCase.getMap()[item.name],
       }));
     jordanCase.operate(configs, [configName], "restore");
   });
@@ -142,12 +141,12 @@ program
     const map = jordanCase.getMap();
     const configs = list.map((item) => ({
       ...item,
-      path: map[item.name]
+      path: map[item.name],
     }));
     jordanCase.operate(
       configs,
       list.map((item) => item.name),
-      "restore"
+      "restore",
     );
   });
 

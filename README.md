@@ -2,7 +2,6 @@
 
 Cinnabar Forge Jordan is a versatile tool for backing up and restoring configuration files and directories. Designed with simplicity in mind, it allows users to manage their configurations in a fast and efficient way.
 
-
 ## Features
 
 - **Flexible Configuration Management**: Easily add, update, or remove configurations to suit your evolving needs.
@@ -59,7 +58,9 @@ To list all registered configurations:
 ```bash
 jordan-cli -c list
 ```
+
 Or
+
 ```bash
 jordan-cli -c ls
 ```
