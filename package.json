@@ -1,7 +1,18 @@
 {
   "name": "@cinnabar-forge/jordan",
   "version": "0.0.0",
-  "description": "Backup and restore your configs (and, practically, anything)",
+  "description": "A versatile tool for backing up and restoring configurations (and, practically, anything)",
+  "keywords": [
+    "backup",
+    "cinnabar-forge",
+    "cli",
+    "config-files",
+    "config-management",
+    "configuration",
+    "filesystem",
+    "jordan",
+    "restore"
+  ],
   "repository": "github:cinnabar-forge/node-jordan",
   "license": "ISC",
   "author": {
@@ -23,23 +34,19 @@
     "version.json"
   ],
   "scripts": {
+    "format": "npx prettier . --write",
     "lint": "npx eslint --fix --ext .js,.json .",
-    "test": "mocha"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm test"
-    }
+    "test": "mocha",
+    "verify": "npm run lint && npm run format && npm test"
   },
   "dependencies": {
-    "as-table": "~1.0.55",
-    "commander": "~12.0.0",
-    "inquirer": "~9.2.14"
+    "as-table": "1.0.55",
+    "commander": "12.0.0",
+    "inquirer": "9.2.15"
   },
   "devDependencies": {
-    "@cinnabar-forge/eslint-plugin": "~0.3.0",
-    "husky": "~9.0.11",
-    "mocha": "~10.3.0"
+    "@cinnabar-forge/eslint-plugin": "0.3.0",
+    "mocha": "10.3.0"
   },
   "engines": {
     "node": ">=10.0.0"
