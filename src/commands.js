@@ -1,7 +1,6 @@
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
-import { createInterface } from "readline";
 
 export class JordanCase {
   constructor(folder) {
@@ -136,31 +135,5 @@ export class JordanCase {
   setMap(map) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     fs.writeFileSync(this.mapFile, JSON.stringify(map, null, 2), "utf8");
-  }
-
-  async verify() {
-    const list = this.getList();
-    let map = this.getMap();
-    const rl = createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-
-    for (const item of list) {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      if (!map[item.name] || !fs.existsSync(map[item.name])) {
-        await new Promise((resolve) => {
-          rl.question(`Enter the correct path for ${item.name}: `, (path) => {
-            map[item.name] = path;
-            resolve();
-          });
-        });
-      }
-    }
-
-    this.setMap(map);
-    rl.close();
-
-    console.log("All good!");
   }
 }

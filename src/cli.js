@@ -17,25 +17,40 @@ program
     "-v, --version"
   )
   .description("Backup and restore your configs (and, practically, anything)")
-  .requiredOption("-f, --folder <folder>", "Set the working folder")
-  .parse(process.argv);
+  .option("-f, --folder <folder>", "Set the working folder")
+  .option(
+    "-c, --current",
+    "Use current folder as the working folder (overrides --folder)"
+  );
 
-const options = program.opts();
-const jordanCase = new JordanCase(options.folder);
-jordanCase.initializeConfigFiles();
+let jordanCaseInstance;
+
+function getJordanCase() {
+  const options = program.opts();
+  const workingFolder = options.current ? process.cwd() : options.folder;
+  if (!workingFolder || workingFolder == null) {
+    throw new Error("Should specify --current or --folder <folder>");
+  }
+  if (jordanCaseInstance == null) {
+    jordanCaseInstance = new JordanCase(workingFolder);
+    jordanCaseInstance.initializeConfigFiles();
+  }
+  return jordanCaseInstance;
+}
 
 program
-  .command("add <configName> <location>")
-  .description("Add or update the configuration")
-  .action((configName, location) => {
-    jordanCase.addConfig(configName, location);
+  .command("add <configName> [path]")
+  .alias("set")
+  .description("Add or set the configuration path")
+  .action((configName, path) => {
+    getJordanCase().addConfig(configName, path);
   });
 
 program
   .command("remove <configName>")
   .description("Remove the configuration")
   .action((configName) => {
-    jordanCase.removeConfig(configName);
+    getJordanCase().removeConfig(configName);
   });
 
 program
@@ -43,6 +58,7 @@ program
   .alias("ls")
   .description("Display registered configs")
   .action(() => {
+    const jordanCase = getJordanCase();
     const list = [];
     const map = jordanCase.getMap();
     jordanCase.getList().map((item) => {
@@ -50,7 +66,17 @@ program
         NAME: item.name,
         TYPE: item.file ? "file" : "directory",
         // eslint-disable-next-line perfectionist/sort-objects
-        PATH: map[item.name],
+        PATH:
+          map[item.name] ?? (item.file ? `[${item.file}]` : ""),
+        // eslint-disable-next-line perfectionist/sort-objects
+        PATH_STATUS: map[item.name]
+          ? // eslint-disable-next-line security/detect-non-literal-fs-filename
+            fs.existsSync(map[item.name])
+            ? "Active"
+            : "Doesn't exist"
+          : "Active (The Cache)",
+          // eslint-disable-next-line perfectionist/sort-objects
+          DESCRIPTION: item.description
       });
     });
 
@@ -62,11 +88,12 @@ program
   .command("backup-all")
   .description("Backup all configurations")
   .action(() => {
+    const jordanCase = getJordanCase();
     const list = jordanCase.getList();
     const map = jordanCase.getMap();
     const configs = list.map((item) => ({
       ...item,
-      path: map[item.name],
+      path: map[item.name]
     }));
     jordanCase.operate(
       configs,
@@ -95,12 +122,13 @@ program
   .command("restore <configName>")
   .description("Restore the configuration")
   .action((configName) => {
+    const jordanCase = getJordanCase();
     const configs = jordanCase
       .getList()
       .filter((item) => item.name === configName)
       .map((item) => ({
         ...item,
-        path: jordanCase.getMap()[item.name],
+        path: jordanCase.getMap()[item.name]
       }));
     jordanCase.operate(configs, [configName], "restore");
   });
@@ -109,25 +137,18 @@ program
   .command("restore-all")
   .description("Restore all configurations")
   .action(() => {
+    const jordanCase = getJordanCase();
     const list = jordanCase.getList();
     const map = jordanCase.getMap();
     const configs = list.map((item) => ({
       ...item,
-      path: map[item.name],
+      path: map[item.name]
     }));
     jordanCase.operate(
       configs,
       list.map((item) => item.name),
       "restore"
     );
-  });
-
-program
-  .command("verify")
-  .alias("check")
-  .description("Check configurations")
-  .action(async () => {
-    await jordanCase.verify();
   });
 
 program.parse(process.argv);
