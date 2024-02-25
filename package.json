@@ -1,6 +1,6 @@
 {
   "name": "@cinnabar-forge/jordan",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A versatile tool for backing up and restoring configurations (and, practically, anything)",
   "keywords": [
     "backup",
