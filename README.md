@@ -105,10 +105,6 @@ cd node-jordan
 npm install
 ```
 
-## Changelog
-
-For a detailed history of changes, check out the [CHANGELOG.md](CHANGELOG.md) file.
-
 ## License
 
 Cinnabar Forge Jordan is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.

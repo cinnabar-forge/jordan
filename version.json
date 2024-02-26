@@ -1,6 +1,6 @@
 {
   "cfVersion": 1,
-  "package": "@cinnabar-forge/jordan",
+  "package": "jordan-backup",
   "name": "Cinnabar Forge Jordan",
   "major": 0,
   "minor": 1,
