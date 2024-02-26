@@ -18,7 +18,7 @@ Cinnabar Forge Jordan is a versatile tool for backing up and restoring configura
 Install Cinnabar Forge Jordan globally using npm:
 
 ```bash
-npm install -g @cinnabar-forge/jordan
+npm install -g jordan-backup
 ```
 
 This will make the `jordan` (interactive) and `jordan-cli` (command-line, aliases: `jordan-cmd` and `jordan-command`) command available in your terminal.
