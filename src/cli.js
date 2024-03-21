@@ -1,42 +1,104 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 import asTable from "as-table";
 import { program } from "commander";
 import fs from "fs";
+import os from "os";
 import path from "path";
 
+import cinnabarData from "./cinnabar.js";
 import { JordanCase } from "./commands.js";
 
-const scriptDirectory = path.dirname(new URL(import.meta.url).pathname);
-const version = JSON.parse(
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  fs.readFileSync(path.resolve(scriptDirectory, "..", "version.json"), "utf8"),
-);
+function loadAppFolder() {
+  const homeDir = os.homedir();
+  const appDir = path.join(homeDir, ".config", "cinnabar-forge", "jordan");
+
+  if (!fs.existsSync(appDir)) {
+    fs.mkdirSync(appDir, { recursive: true });
+  }
+  return appDir;
+}
+
+function loadDefaultFolder() {
+  const appDir = loadAppFolder();
+  const configPath = path.join(appDir, "config.json");
+  if (!fs.existsSync(configPath)) {
+    fs.writeFileSync(configPath, JSON.stringify({}), "utf8");
+    console.log(`${configPath} has been created`);
+  }
+
+  const configFile = fs.readFileSync(configPath);
+  const configData = JSON.parse(configFile);
+
+  return fs.existsSync(configData.mainFolder)
+    ? configData.mainFolder
+    : process.cwd();
+}
+
+function saveDefaultFolder(newPath) {
+  // if (!) {
+  //   return false;
+  // }
+  const appDir = loadAppFolder();
+  const configPath = path.join(appDir, "config.json");
+
+  fs.writeFileSync(
+    configPath,
+    JSON.stringify({
+      mainFolder: fs.existsSync(newPath) ? newPath : undefined,
+    }),
+    "utf8",
+  );
+
+  return true;
+}
 
 program
-  .version(
-    `v${version.major}.${version.minor}.${version.patch}`,
-    "-v, --version",
-  )
+  .version(`v${cinnabarData.version.text}`, "-v, --version")
   .description("Backup and restore your configs (and, practically, anything)")
-  .option("-f, --folder <folder>", "Set the working folder")
   .option(
-    "-c, --current",
-    "Use current folder as the working folder (overrides --folder)",
+    "-f, --folder <folder>",
+    "Set the working folder",
+    loadDefaultFolder(),
   );
 
 let jordanCaseInstance;
 
 function getJordanCase() {
   const options = program.opts();
-  const workingFolder = options.current ? process.cwd() : options.folder;
-  if (!workingFolder || workingFolder == null) {
-    throw new Error("Should specify --current or --folder <folder>");
+  const workingFolder = options.folder;
+  if (
+    !workingFolder ||
+    workingFolder == null ||
+    !fs.existsSync(workingFolder)
+  ) {
+    throw new Error("Should specify --folder <folder>");
   }
   if (jordanCaseInstance == null) {
     jordanCaseInstance = new JordanCase(workingFolder);
-    jordanCaseInstance.initializeConfigFiles();
+  }
+  if (!jordanCaseInstance.isFolderJordan()) {
+    console.error("Init Jordan Backup folder with 'init' command first");
+    // eslint-disable-next-line no-process-exit
+    process.exit(1);
   }
   return jordanCaseInstance;
 }
+
+program
+  .command("folder [path]")
+  .description(
+    "Set default backup folder (will be used instead of current working directory)",
+  )
+  .action((path) => {
+    saveDefaultFolder(path);
+  });
+
+program
+  .command("init")
+  .description("Init Jordan Backup files")
+  .action(() => {
+    getJordanCase().initializeConfigFiles();
+  });
 
 program
   .command("add <configName> [path]")
@@ -83,7 +145,7 @@ program
     console.log(asTable.configure({ delimiter: " | " })(list));
   });
 
-  program
+program
   .command("backup <configName>")
   .description("Backup the configurations")
   .action((configName) => {

@@ -21,24 +21,40 @@ Install Cinnabar Forge Jordan globally using npm:
 npm install -g jordan-backup
 ```
 
-This will make the `jordan` (interactive) and `jordan-cli` (command-line, aliases: `jordan-cmd` and `jordan-command`) command available in your terminal.
+This will make the `jordan` command available in your terminal.
 
-### Basic Usage
+### Usage
 
-To start using Jordan, you need to specify a working folder with the `-f` or `--folder` option. This folder will be used to store and manage your configurations.
+To start using Jordan, you need to specify a working folder in two ways:
+
+- with `folder` command. It will set the specified folder as the main one.
 
 ```bash
-jordan-cli -f <path_to_your_folder>
+jordan folder <path_to_your_folder>
 ```
 
-You can also use `-c` or `--current` option to make the program work from the folder you're currently in. For the sake of simplicity, I will use this option in next examples.
+- with the `-f` or `--folder` option. The specified folder will be used for this time only.
+
+```bash
+jordan -f <path_to_your_folder>
+```
+
+#### Initialization
+
+Before we can use other commands, we should init folder.
+
+```bash
+jordan init
+```
+
+It will create `jordan.json` file, which declares folder as Jordan Backup's one.
 
 #### Adding a Configuration
 
 To add a new configuration or update an existing one:
 
 ```bash
-jordan-cli -c add <configName> [path]
+jordan add <configName> [path]
 ```
 
 If path is omitted, the config will be considered 'cached' and will ignore `backup` and `restore` commands.
@@ -48,7 +64,7 @@ If path is omitted, the config will be considered 'cached' and will ignore `back
 To remove an existing configuration:
 
 ```bash
-jordan-cli -c remove <configName>
+jordan remove <configName>
 ```
 
 #### Listing All Configurations
@@ -56,13 +72,13 @@ jordan-cli -c remove <configName>
 To list all registered configurations:
 
 ```bash
-jordan-cli -c list
+jordan list
 ```
 
 Or
 
 ```bash
-jordan-cli -c ls
+jordan ls
 ```
 
 #### Backing Up and Restoring
@@ -70,28 +86,28 @@ jordan-cli -c ls
 To back up a configuration:
 
 ```bash
-jordan-cli -c backup <configName>
+jordan backup <configName>
 ```
 
 To back up all configurations:
 
 ```bash
-jordan-cli -c backup-all
+jordan backup-all
 ```
 
 To restore a configuration:
 
 ```bash
-jordan-cli -c restore <configName>
+jordan restore <configName>
 ```
 
 To restore all configurations:
 
 ```bash
-jordan-cli -c restore-all
+jordan restore-all
 ```
 
-For more specific operations or additional commands, use `jordan-cli --help` or `-h` to see all available options.
+For more specific operations or additional commands, use `jordan --help` or `-h` to see all available options.
 
 ## Contributing
 
@@ -100,8 +116,8 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 Clone the repository and install dependencies:
 
 ```bash
-git clone git@github.com:cinnabar-forge/node-jordan.git
-cd node-jordan
+git clone git@github.com:cinnabar-forge/jordan.git
+cd jordan
 npm install
 ```
 

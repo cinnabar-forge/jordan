@@ -26,15 +26,11 @@
   "type": "module",
   "main": "src/cli.js",
   "bin": {
-    "jordan": "bin/jordan",
-    "jordan-cli": "bin/jordan-command",
-    "jordan-cmd": "bin/jordan-command",
-    "jordan-command": "bin/jordan-command"
+    "jordan": "bin/jordan"
   },
   "files": [
     "bin",
-    "src",
-    "version.json"
+    "src"
   ],
   "scripts": {
     "format": "npx prettier . --write",
@@ -52,6 +48,6 @@
     "mocha": "10.3.0"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=8.3.0"
   }
 }

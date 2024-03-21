@@ -12,7 +12,7 @@ export class JordanCase {
     this.jordanFile = path.join(this.folder, "jordan.json");
     this.listFile = path.join(this.folder, "list.json");
     this.mapFile = path.join(this.folder, "map.json");
-    path.basename
+    path.basename;
   }
 
   addConfig(name, _path) {
@@ -37,7 +37,10 @@ export class JordanCase {
       console.log(`${name} exists. Updating path`);
     } else {
       console.log(`${name} ${configExists ? "updated" : "added"}`);
-      list.push({ file: !isDirectory ? path.basename(_path) : undefined, name });
+      list.push({
+        file: !isDirectory ? path.basename(_path) : undefined,
+        name,
+      });
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       fs.writeFileSync(this.listFile, JSON.stringify(list, null, 2), "utf8");
     }
@@ -87,6 +90,11 @@ export class JordanCase {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       fs.writeFileSync(this.mapFile, JSON.stringify({}, null, 2), "utf8");
     }
+  }
+
+  isFolderJordan() {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    return fs.existsSync(this.jordanFile);
   }
 
   async operate(configs, names, action) {
