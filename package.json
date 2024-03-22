@@ -26,7 +26,7 @@
   "type": "module",
   "main": "src/cli.js",
   "bin": {
-    "jordan": "bin/jordan"
+    "jordan": "bin/jordan.js"
   },
   "files": [
     "bin",
