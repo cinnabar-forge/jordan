@@ -6,11 +6,11 @@ export default {
   "name": "Jordan Backup",
   "version": {
     "major": 0,
-    "minor": 1,
-    "patch": 3,
-    "revision": 4,
-    "text": "0.1.3",
-    "timestamp": 1708948684
+    "minor": 2,
+    "patch": 0,
+    "revision": 5,
+    "text": "0.2.0",
+    "timestamp": 1711100043
   },
   "stack": {
     "nodejs": {

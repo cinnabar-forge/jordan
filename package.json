@@ -1,6 +1,6 @@
 {
   "name": "jordan-backup",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A versatile tool for backing up and restoring configurations (and, practically, anything)",
   "keywords": [
     "backup",
